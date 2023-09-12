@@ -1,1 +1,1 @@
-# Prometheus
+# js-prometheus
