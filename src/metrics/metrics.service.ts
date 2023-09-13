@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { Gauge, register } from 'prom-client';
+import { Gauge, MetricObjectWithValues, MetricValue, register } from 'prom-client';
+import { Util } from 'src/util';
 
 @Injectable()
 export class MetricsService {
@@ -25,18 +26,18 @@ export class MetricsService {
     if (!this.cryptoPriceStatus) return false
     
     // Initialize the metric with default values
-    this.cryptoPriceStatus.set({ exchange: 'kraken', app: 'node_crypto_crawler' }, 0);
-    this.cryptoPriceStatus.set({ exchange: 'okex', app: 'node_crypto_crawler' }, 1);
-    this.cryptoPriceStatus.set({ exchange: 'huobi', app: 'node_crypto_crawler' }, 0);
-    this.cryptoPriceStatus.set({ exchange: 'binance', app: 'node_crypto_crawler' }, 0);
-    this.cryptoPriceStatus.set({ exchange: 'bitfinex', app: 'node_crypto_crawler' }, 0);
-    this.cryptoPriceStatus.set({ exchange: 'coinmarketcap', app: 'node_crypto_crawler' }, 0);
-    this.cryptoPriceStatus.set({ exchange: 'coinGecko', app: 'node_crypto_crawler' }, 1);
+    this.cryptoPriceStatus.set({ exchange: 'kraken', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'okex', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'huobi', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'binance', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'bitfinex', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'coinmarketcap', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
+    this.cryptoPriceStatus.set({ exchange: 'coinGecko', app: 'node_crypto_crawler' }, Util.getRandomZeroOrOne());
 
     return true
   }
 
-  getCryptoPriceStatus() {
-    return this.cryptoPriceStatus;
+  getCryptoPriceStatus(): Promise<MetricObjectWithValues<MetricValue<string>>[]> {
+    return register.getMetricsAsJSON()
   }
 }

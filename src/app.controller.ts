@@ -24,8 +24,7 @@ export class AppController {
   }
 
   @Get('metrics')
-  async getMetrics(@Res() res: Response) {
-    res.set('Content-Type', register.contentType);
-    res.end(await register.metrics());
+  async getMetrics() {
+    return this.metricsService.getCryptoPriceStatus()
   }
 }
