@@ -1,6 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Gauge, MetricObjectWithValues, MetricValue, register } from 'prom-client';
+import { ENV } from 'src/constant';
 import { Util } from 'src/util';
+import axios from 'axios'
 
 @Injectable()
 export class MetricsService {
@@ -39,5 +41,26 @@ export class MetricsService {
 
   getCryptoPriceStatus(): Promise<MetricObjectWithValues<MetricValue<string>>[]> {
     return register.getMetricsAsJSON()
+  }
+
+  async getMetricsFromGrafana() {
+    // const data = {}
+    // const config: AxiosRequestConfig = {}
+    // const res = await axios.post('https://prometheus-prod-13-prod-us-east-0.grafana.net/api/prom', data, config)
+    // console.log(res)
+    return 'in development'
+  }
+
+  async sendMetricsToGrafana(): Promise<boolean> {
+    const body = `grafana_demo,label=grafana_demo_label metric=${Util.getRandomInt(1, 100)}`;
+    console.log(body)
+    const response = await axios.post(`${ENV.GRAFANA_WRITE}`, body, {
+      headers: {
+          'Authorization': `Bearer ${ENV.USER_ID}:${ENV.API_KEY}`, 
+          'Content-Type': 'text/plain',
+      },
+    }).catch(err => err?.response);
+
+   return response?.status == 204
   }
 }

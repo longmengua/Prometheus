@@ -15,4 +15,10 @@ export class Util {
     // Round the random decimal number to 0 or 1
     return Math.round(randomDecimal);
   }
+
+  public static getRandomInt(min: number, max: number) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
 }
